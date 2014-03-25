@@ -215,6 +215,13 @@ def isLoggedIn() {
         return false
     }
     
+    if (!data.topaz)
+    {
+	log.debug "no data.topaz"
+        return false
+    }
+
+    
     def now = new Date().getTime();
     return data.auth.expires_in > now
 }
