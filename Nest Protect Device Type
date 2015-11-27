@@ -69,6 +69,7 @@
  *
  *	Version: 1.0 - Initial Nickh Bailey Version
  *	Version: 1.1 - Cleaned up code, fixed "unknown" error for andriod devices, updated authentication, layout, and logging.
+ *	Version: 1.2 - Refresh Auth token on settings update
  */
 
 preferences {
@@ -129,10 +130,15 @@ def initialize() {
 	log.info "Nest Protect ${textVersion()} ${textCopyright()}"
 	poll()
 }
+def updated() {
+	log.info "Nest Protect ${textVersion()} ${textCopyright()}"
+	data.auth = null
+}
 
 def poll() {
     log.debug "Executing 'poll'"
     api('status', []) {
+//	log.debug "${it.data.topaz}"
         data.topaz = it.data.topaz.getAt(settings.mac.toUpperCase())
         data.topaz.smoke_status = data.topaz.smoke_status == 0 ? 'clear' : 'detected'
         data.topaz.co_status = data.topaz.co_status == 0 ? 'clear' : 'detected'
@@ -239,7 +245,7 @@ def isLoggedIn() {
 }
 
 private def textVersion() {
-    def text = "Version 1.1"
+    def text = "Version 1.2"
 }
 
 private def textCopyright() {
